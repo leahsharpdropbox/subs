@@ -6,11 +6,18 @@ import subscriptionRouter from './routes/subscription.routes.js';
 import connectToDatebase from './database/mongodb.js';
 import errorMiddleware from './middlewares/error.middleware.js';
 import cookieParser from 'cookie-parser';
+import arcjetMiddleware from './middlewares/arcjet.middleware.js';
 
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded({extended: false}));
-app.use(cookieParser);
+app.use(cookieParser());
+app.use(arcjetMiddleware);
+
+// app.use((req, res, next) => {
+//   console.log(`🟡 Incoming ${req.method} ${req.url}`);
+//   next();
+// });
 
 app.use('/api/v1/auth', authRouter);
 app.use('/api/v1/users', userRouter);
@@ -23,8 +30,9 @@ app.get('/', (req, res) => {
 });
 
 app.listen(PORT, async () => {
-    console.log(`Subscription Tracker API is running on http://localhost:${PORT}`);
+    console.log(`🚀 Subscription Tracker API live at port ${PORT}`);
     await connectToDatebase();
 });
+
 
 export default app;
